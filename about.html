@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About — ShopEasy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif}
+    :root{--primary:#4a6cf7;--secondary:#6a11cb;--dark:#333;--light:#f8f9fa;--gray:#6c757d}
+    body{background:var(--light);color:var(--dark)}.container{max-width:1100px;margin:0 auto;padding:28px}
+    header{background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.06);position:sticky;top:0}
+    .header-content{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+    .logo{font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    nav ul{list-style:none;display:flex;gap:18px}
+    nav a{text-decoration:none;color:var(--dark);font-weight:600}
+    main{padding:28px 0}
+    h1{font-size:28px;margin-bottom:12px}
+    p{color:var(--gray);margin-bottom:12px}
+    footer{background:var(--dark);color:#ddd;padding:28px 20px;margin-top:40px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <div class="logo"><i class="fas fa-shopping-bag"></i> ShopEasy</div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="categories.html">Categories</a></li>
+          <li><a href="about.html" class="active">About</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>About ShopEasy</h1>
+    <p>ShopEasy is a demo storefront built to showcase a clean, modern e‑commerce UI. We combine thoughtful design with straightforward client-side features so you can prototype ideas quickly.</p>
+
+    <h2 style="margin-top:18px">Our mission</h2>
+    <p>We aim to make online shopping pleasant and efficient by focusing on clear product information, fast browsing, and intuitive interactions. This project is a design and engineering playground for building better retail experiences.</p>
+
+    <h2 style="margin-top:18px">What we build</h2>
+    <ul style="margin:10px 0 18px 20px;color:var(--gray)">
+      <li>Responsive product grids and category browsing</li>
+      <li>Per-product image sliders and galleries</li>
+      <li>Lightweight client-side cart and persisted state</li>
+      <li>Accessible forms and simple social login flows (demo)</li>
+    </ul>
+
+    <h2 style="margin-top:18px">Team & contact</h2>
+    <p>We're a small team of designers and engineers exploring ecommerce UI patterns. For questions or partnership inquiries, email <a href="mailto:hello@shopeasy.com">hello@shopeasy.com</a>.</p>
+  </main>
+
+  <footer>
+    <div class="container">&copy; 2025 ShopEasy — Built with care.</div>
+  </footer>
+</body>
+</html>

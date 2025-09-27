@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopEasy - Modern E-commerce</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+<header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-shopping-bag"></i> ShopEasy
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="active">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="categories.html">Categories</a></li>
+                        <li><a href="deals.html">Deals</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <div class="auth-buttons" id="authButtons">
+                        <button class="btn btn-login" id="loginBtn">Login</button>
+                        <button class="btn btn-signup" id="signupBtn">Sign Up</button>
+                    </div>
+                    <div class="user-profile" id="userProfile">
+                        <div class="user-avatar-small" id="userAvatar">U</div>
+                        <span id="userName">User</span>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="#" id="myProfileBtn"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                            <a href="#" id="pastOrdersBtn"><i class="fas fa-shopping-bag"></i> Past Orders</a>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search products...">
+                    </div>
+                    <div class="cart-icon" id="cartIcon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span> <!-- Add Admin Access Button -->
+                    <button class="admin-access-btn" id="adminAccessBtn" title="Staff Access">
+                        <i class="fas fa-user-shield"></i> Staff
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Add Admin Access Modal -->
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-modal-content">
+            <div class="admin-modal-header">
+                <h3><i class="fas fa-user-shield"></i> Staff Access</h3>
+                <button class="close-admin-modal" id="closeAdminModal">&times;</button>
+            </div>
+            <div class="admin-modal-body">
+                <div class="admin-form-group">
+                    <label for="adminPassword">Enter Staff Password</label>
+                    <input type="password" id="adminPasswordInput" placeholder="Enter password to continue">
+                </div>
+                <button class="admin-submit-btn" id="adminSubmitBtn">Access Admin Panel</button>
+                <div class="admin-error" id="adminError">Invalid password. Please try again.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-cart" id="closeCart">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be dynamically added here -->
+        </div>
+        <div class="cart-summary">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+        </div>
+    </div>
+    
+    <!-- Login/Signup Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-content">
+            <div class="login-header">
+                <h3>Welcome to ShopEasy</h3>
+                <button class="close-login" id="closeLogin">&times;</button>
+            </div>
+            <div class="login-tabs">
+                <button class="login-tab active" data-tab="login">Login</button>
+                <button class="login-tab" data-tab="signup">Sign Up</button>
+            </div>
+            <div class="login-form">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="login-btn">Login</button>
+                    <div class="forgot-password">
+                        <a href="#">Forgot your password?</a>
+                    </div>
+                </form>
+                <form id="signupForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email</label>
+                        <input type="email" id="signupEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupConfirmPassword">Confirm Password</label>
+                        <input type="password" id="signupConfirmPassword" required>
+                    </div>
+                    <button type="submit" class="login-btn">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profile Modal -->
+    <div class="profile-modal" id="profileModal">
+        <div class="profile-content">
+            <div class="profile-header">
+                <h3>My Profile</h3>
+                <button class="close-profile" id="closeProfile">&times;</button>
+            </div>
+            <div class="profile-body">
+                <div class="profile-info">
+                    <div class="profile-field">
+                        <div class="profile-label">Name:</div>
+                        <div class="profile-value" id="profileName">User Name</div>
+                    </div>
+                    <div class="profile-field">
+                        <div class="profile-label">Email:</div>
+                        <div class="profile-value" id="profileEmail">user@example.com</div>
+                    </div>
+                    <div class="profile-field">
+                        <div class="profile-label">Member Since:</div>
+                        <div class="profile-value" id="profileMemberSince">January 2023</div>
+                    </div>
+                    <div class="profile-field">
+                        <div class="profile-label">Total Orders:</div>
+                        <div class="profile-value" id="profileTotalOrders">5</div>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="btn btn-outline" id="editProfileBtn">Edit Profile</button>
+                    <button class="btn btn-primary" id="saveProfileBtn" style="display: none;">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Past Orders Modal -->
+    <div class="orders-modal" id="ordersModal">
+        <div class="orders-content">
+            <div class="orders-header">
+                <h3>Past Orders</h3>
+                <button class="close-orders" id="closeOrders">&times;</button>
+            </div>
+            <div class="orders-body">
+                <div class="orders-list" id="ordersList">
+                    <!-- Orders will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <!-- Main Content (Home Page) -->
+    <div id="mainContent">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1>Summer Sale: Up to 50% Off!</h1>
+                <p>Discover the latest trends in fashion, electronics, and home goods. Free shipping on orders over $50.</p>
+                <div class="hero-buttons">
+                    <a href="#" class="btn btn-accent">Shop Now</a>
+                    <a href="#" class="btn btn-outline">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Recommendations Section -->
+        <section class="ai-recommendations">
+            <div class="container">
+                <div class="recommendation-header">
+                    <h2 class="section-title" style="text-align: left; margin: 0;">Recommended For You</h2>
+                </div>
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be dynamically added here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Gamification Section -->
+        <section class="gamification-section">
+            <div class="container">
+                <h2 class="section-title">Earn Rewards As You Shop</h2>
+                <div class="gamification-card">
+                    <div class="reward-level">Gold Member</div>
+                    <h3>You're 150 points away from Platinum status!</h3>
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+                    <div class="reward-info">
+                        <div>Current: 850 points</div>
+                        <div>Next level: 1000 points</div>
+                    </div>
+                    <div class="reward-points">+50 points on your next purchase!</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Shopping Section -->
+        <section class="social-shopping">
+            <div class="container">
+                <h2 class="section-title">Shop With Friends</h2>
+                <div class="social-grid">
+                    <div class="social-card">
+                        <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Social shopping" class="social-image">
+                        <div class="social-content">
+                            <div class="social-user">
+                                <div class="user-avatar">JD</div>
+                                <div>Jane D. and 3 friends</div>
+                            </div>
+                            <div class="social-product">Shopping for Outdoor Gear</div>
+                            <div class="social-comment">"We're planning a hiking trip next month!"</div>
+                        </div>
+                    </div>
+                    <div class="social-card">
+                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Social shopping" class="social-image">
+                        <div class="social-content">
+                            <div class="social-user">
+                                <div class="user-avatar">MS</div>
+                                <div>Mike S. and 2 friends</div>
+                            </div>
+                            <div class="social-product">Collaborative Wishlist</div>
+                            <div class="social-comment">"Planning our new apartment together!"</div>
+                        </div>
+                    </div>
+                    <div class="social-card">
+                        <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Social shopping" class="social-image">
+                        <div class="social-content">
+                            <div class="social-user">
+                                <div class="user-avatar">AR</div>
+                                <div>Alex R. shared a cart</div>
+                            </div>
+                            <div class="social-product">Office Supplies Collective Order</div>
+                            <div class="social-comment">"Join our bulk order to save on shipping!"</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Voice Search Section -->
+        <section class="voice-search-section">
+            <div class="container">
+                <h2 class="section-title">Try Voice Shopping</h2>
+                <p>Search for products using your voice for a hands-free shopping experience</p>
+                <button class="voice-search-btn" id="voiceSearchBtn">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <div class="voice-status" id="voiceStatus">Click the microphone and start speaking</div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="container">
+                <h2 class="section-title">Why Shop With Us?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shipping-fast"></i>
+                        </div>
+                        <h3 class="feature-title">Free Shipping</h3>
+                        <p>Free shipping on orders over $50. Fast delivery to your doorstep.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Secure Payment</h3>
+                        <p>Your payment information is safe with our encrypted checkout.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-undo-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Easy Returns</h3>
+                        <p>Not satisfied? Return within 30 days for a full refund.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3 class="feature-title">24/7 Support</h3>
+                        <p>Our customer service team is here to help you anytime.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Innovative Features Section -->
+        <section class="innovation-section">
+            <div class="container">
+                <h2 class="section-title">Innovative Shopping Experience</h2>
+                <div class="innovation-grid">
+                    <div class="innovation-card">
+                        <div class="innovation-badge">New</div>
+                        <div class="innovation-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3 class="innovation-title">AI-Powered Recommendations</h3>
+                        <p>Our smart algorithm learns your preferences to suggest products you'll love.</p>
+                    </div>
+                   
+                    <div class="innovation-card">
+                        <div class="innovation-badge">Eco</div>
+                        <div class="innovation-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3 class="innovation-title">Sustainable Shopping</h3>
+                        <p>Track your carbon footprint and choose eco-friendly delivery options.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Payment Page (Hidden by default) -->
+<div id="paymentPage" style="display: none;">
+    <div class="payment-container">
+        <h2 class="section-title">Checkout</h2>
+        
+        <div class="payment-steps">
+            <div class="step completed">
+                <div class="step-number">1</div>
+                <div class="step-title">Cart</div>
+            </div>
+            <div class="step active">
+                <div class="step-number">2</div>
+                <div class="step-title">Payment</div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-title">Confirmation</div>
+            </div>
+        </div>
+        
+        <div class="payment-form">
+            <div class="form-section">
+                <h3>Customer Information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name *</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name *</label>
+                        <input type="text" id="lastName" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="customerEmail" required 
+                           value="${currentUser ? currentUser.email : ''}">
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Shipping Information</h3>
+                <div class="form-group">
+                    <label for="address">Address *</label>
+                    <input type="text" id="address" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City *</label>
+                        <input type="text" id="city" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="zipCode">ZIP Code *</label>
+                        <input type="text" id="zipCode" required>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Payment Method</h3>
+                <div class="payment-methods">
+                    <div class="payment-method selected" data-method="credit">
+                        <i class="fas fa-credit-card"></i>
+                        <div>Credit Card</div>
+                    </div>
+                    <div class="payment-method" data-method="paypal">
+                        <i class="fab fa-paypal"></i>
+                        <div>PayPal</div>
+                    </div>
+                    <div class="payment-method" data-method="apple">
+                        <i class="fab fa-apple-pay"></i>
+                        <div>Apple Pay</div>
+                    </div>
+                </div>
+                
+                <div id="creditCardForm">
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number *</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expiryDate">Expiry Date *</label>
+                            <input type="text" id="expiryDate" placeholder="MM/YY" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV *</label>
+                            <input type="text" id="cvv" placeholder="123" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cardName">Name on Card *</label>
+                        <input type="text" id="cardName" required>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div id="orderItems">
+                    <!-- Order items will be dynamically added here -->
+                </div>
+                <div class="order-total">
+                    <span>Total:</span>
+                    <span id="orderTotal">$0.00</span>
+                </div>
+            </div>
+            
+            <button class="place-order-btn" id="placeOrderBtn">Place Order</button>
+        </div>
+    </div>
+</div>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ShopEasy</h3>
+                    <p>Your one-stop destination for all your shopping needs. Quality products, great prices, and excellent customer service.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="contact.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Customer Service</h3>
+                    <ul>
+                        <li><a href="shipping.html">Shipping Info</a></li>
+                        <li><a href="returns.html">Returns</a></li>
+                        <li><a href="#">Size Guide</a></li>
+                        <li><a href="security.html">Security</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Commerce St, City, State 12345</li>
+                        <li><i class="fas fa-phone"></i> 1-800-SHOPEASY</li>
+                        <li><i class="fas fa-envelope"></i> support@shopeasy.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 ShopEasy. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js">    </script>
+</body>
+</html>

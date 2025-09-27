@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Deals — ShopEasy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif}
+    :root{--primary:#4a6cf7;--secondary:#6a11cb;--accent:#ff4757;--dark:#333;--light:#f8f9fa;--gray:#6c757d}
+    body{background:var(--light);color:var(--dark)}.container{max-width:1200px;margin:0 auto;padding:28px}
+    header{background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.06);position:sticky;top:0;z-index:100}
+    .header-content{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+    .logo{font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    nav ul{list-style:none;display:flex;gap:18px}
+    nav a{text-decoration:none;color:var(--dark);font-weight:600}
+    main{padding:28px 0}
+    .hero{background:linear-gradient(90deg,var(--primary),var(--secondary));color:white;padding:24px;border-radius:12px;margin-bottom:20px}
+    .hero h1{font-size:28px;margin-bottom:6px}
+    .hero p{opacity:.95}
+
+    .deals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin-top:18px}
+    .deal-card{background:#fff;border-radius:12px;padding:12px;box-shadow:0 8px 30px rgba(0,0,0,.06);display:flex;flex-direction:column;position:relative}
+    .deal-image{width:100%;height:150px;object-fit:contain;margin-bottom:10px}
+    .deal-title{font-weight:700;margin-bottom:6px}
+    .deal-desc{color:var(--gray);font-size:0.95rem;margin-bottom:8px;min-height:36px}
+    .price-row{display:flex;align-items:center;gap:10px}
+    .orig-price{color:var(--gray);text-decoration:line-through}
+    .new-price{font-weight:800;color:var(--dark)}
+    .discount-pill{position:absolute;top:12px;left:12px;background:var(--accent);color:white;padding:6px 8px;border-radius:8px;font-weight:700}
+
+    .flash { display:flex; gap:12px; align-items:center; margin-top:12px; }
+    .countdown { background:rgba(0,0,0,0.05); padding:8px 12px; border-radius:8px; font-weight:700 }
+
+    .newsletter{background:#fff;border-radius:12px;padding:16px;box-shadow:0 8px 30px rgba(0,0,0,.04);margin-top:20px;display:flex;gap:12px;align-items:center}
+    .newsletter input{flex:1;padding:10px 12px;border-radius:8px;border:1px solid #e6e6e6}
+    .newsletter button{background:var(--primary);color:white;padding:10px 14px;border-radius:8px;border:none}
+
+    footer{background:var(--dark);color:#ddd;padding:28px 20px;margin-top:36px}
+    @media(max-width:768px){.header-content{flex-direction:column;align-items:stretch}.hero{padding:18px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <div class="logo"><i class="fas fa-shopping-bag"></i> ShopEasy</div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="categories.html">Categories</a></li>
+          <li><a href="deals.html" class="active">Deals</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Hot Deals & Limited Offers</h1>
+      <p>Save on selected items — limited-time discounts and flash sales. Deals update frequently.</p>
+      <div class="flash">
+        <div>Flash sale ends in</div>
+        <div id="countdown" class="countdown">00:00:00</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Today's Deals</h2>
+      <div id="dealsGrid" class="deals-grid"></div>
+    </section>
+
+    <section class="newsletter">
+      <div style="font-weight:700">Join our newsletter</div>
+      <input id="newsletterEmail" placeholder="your@email.com" />
+      <button id="subscribeBtn">Subscribe</button>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">&copy; 2025 ShopEasy — Deals & offers are for demo purposes.</div>
+  </footer>
+
+  <script>
+    // Products array (same shape as other pages)
+    const products = [
+  { id: 1, name: "Smartphone", category: "electronics", price: "$499", img: "images/smartphone.jpg", description: "A high-end smartphone with great features." },
+  { id: 2, name: "Headphones", category: "electronics", price: "$99", img: "images/headphones.jpg", description: "Noise-cancelling headphones for music lovers." },
+  { id: 3, name: "Laptop", category: "electronics", price: "$899", img: "images/laptop.jpg", description: "Powerful laptop for work and play." },
+  { id: 4, name: "Smartwatch", category: "electronics", price: "$199", img: "images/watch.jpg", description: "Track your fitness and notifications." },
+  { id: 5, name: "T-Shirt", category: "fashion", price: "$25", img: "images/tshirt.jpg", description: "Comfortable cotton T-shirt." },
+  { id: 6, name: "Sneakers", category: "fashion", price: "$120", img: "images/sneakers.jpg", description: "Trendy sneakers for everyday wear." },
+  { id: 7, name: "Jeans", category: "fashion", price: "$60", img: "images/jeans.jpg", description: "Classic denim jeans." },
+  { id: 8, name: "Jacket", category: "fashion", price: "$150", img: "images/jacket.jpg", description: "Warm and stylish jacket." },
+  { id: 9, name: "Sofa", category: "home", price: "$799", img: "images/sofa.jpg", description: "Stylish and comfortable sofa." },
+  { id: 10, name: "Dining Table", category: "home", price: "$499", img: "images/dining_table.jpg", description: "Elegant dining table for family meals." },
+  { id: 11, name: "Lamp", category: "home", price: "$45", img: "images/lamp.jpg", description: "Modern bedside lamp." },
+  { id: 12, name: "Cookware Set", category: "home", price: "$120", img: "images/cookware_set.jpg", description: "Durable non-stick cookware set." },
+  { id: 13, name: "Football", category: "sports", price: "$30", img: "images/cricket_kit.jpg", description: "Cricket kit." },
+  { id: 14, name: "Tennis Racket", category: "sports", price: "$80", img: "images/tennis_racket.jpg", description: "Lightweight racket for all levels." },
+  { id: 15, name: "Yoga Mat", category: "sports", price: "$25", img: "images/yoga_mat.jpg", description: "Non-slip yoga mat." },
+  { id: 16, name: "Dumbbell Set", category: "sports", price: "$100", img: "images/dumbbell_set.jpg", description: "Adjustable dumbbell set." },
+  { id: 17, name: "Novel - Mystery", category: "books", price: "$15", img: "images/novel_mystery.jpg", description: "Thrilling mystery novel." },
+  { id: 18, name: "Science Book", category: "books", price: "$20", img: "images/science_book.jpg", description: "Explore the wonders of science." },
+  { id: 19, name: "Cookbook", category: "books", price: "$18", img: "images/cookbook.jpg", description: "Delicious recipes from around the world." },
+  { id: 20, name: "Children's Storybook", category: "books", price: "$12", img: "images/child_storybook.jpg", description: "Fun stories for kids." },
+  { id: 21, name: "Bluetooth Speaker", category: "electronics", price: "$70", img: "images/bluetooth_speaker.jpg", description: "Portable speaker with rich sound." },
+  { id: 22, name: "Gaming Console", category: "electronics", price: "$399", img: "images/gaming_console.jpg", description: "Next-gen gaming console." }
+];
+
+    // Define some sample deal discounts (productId -> percent off)
+    const deals = { 1:30, 3:20, 6:25, 9:35, 22:15 };
+
+    function parsePrice(priceStr){
+      if (!priceStr) return {currency:'$', amount:0};
+      const s = String(priceStr).trim();
+      const m = s.match(/([A-Za-z$€£₹¥]{1,3})?\s*([0-9,.]+)/);
+      if (m) return {currency: m[1]||'$', amount: Number(m[2].replace(/,/g,''))};
+      return {currency:'$', amount: Number(s.replace(/[^0-9.]/g,''))||0};
+    }
+
+    function formatPriceParts(currency, amount){
+      // format with commas
+      const parts = amount.toFixed(2).replace(/\.00$/,'').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return `<span class="currency">${currency}</span><span class="amount">${parts}</span>`;
+    }
+
+    function renderDeals(){
+      const container = document.getElementById('dealsGrid');
+      container.innerHTML = '';
+      const listed = products.filter(p => deals[p.id]);
+      listed.forEach(p => {
+        const pct = deals[p.id];
+        const {currency, amount} = parsePrice(p.price);
+        const newAmount = Math.round((amount * (100 - pct)) / 1)/100; // two decimals
+        const card = document.createElement('article');
+        card.className = 'deal-card';
+        card.innerHTML = `
+          <div class="discount-pill">-${pct}%</div>
+          <img class="deal-image" src="${p.img}" alt="${p.name}">
+          <div class="deal-title">${p.name}</div>
+          <div class="deal-desc">${p.description||''}</div>
+          <div class="price-row">
+            <div class="orig-price">${formatPriceParts(currency, amount)}</div>
+            <div class="new-price">${formatPriceParts(currency, (amount*(100-pct)/100))}</div>
+          </div>
+          <div style="margin-top:10px;display:flex;gap:8px"><a class="btn" href="#" style="background:var(--primary);color:white;border-radius:8px;padding:8px 10px">Add to Cart</a><a class="btn" href="detail.html?id=${p.id}" style="border:1px solid #e6e6e6;border-radius:8px;padding:8px 10px">View</a></div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Flash sale countdown (set to 6 hours from now)
+    function startCountdown(hours=6){
+      const end = Date.now() + hours*3600*1000;
+      const el = document.getElementById('countdown');
+      function tick(){
+        const diff = Math.max(0, end - Date.now());
+        const hrs = Math.floor(diff / (3600*1000));
+        const mins = Math.floor((diff % (3600*1000)) / (60*1000));
+        const secs = Math.floor((diff % (60*1000)) / 1000);
+        el.textContent = `${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+        if (diff>0) requestAnimationFrame(tick);
+      }
+      tick();
+    }
+
+    document.getElementById('subscribeBtn').addEventListener('click', ()=>{
+      const email = document.getElementById('newsletterEmail').value.trim();
+      if (!email.includes('@')) { alert('Please enter a valid email'); return; }
+      alert('Thanks! Subscribed: ' + email);
+      document.getElementById('newsletterEmail').value = '';
+    });
+
+    // Initialize
+    renderDeals();
+    startCountdown(6);
+  </script>
+</body>
+</html>

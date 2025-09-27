@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShopEasy — Categories</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        /* Copied core styles from lodex.html (trimmed for categories page) */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        :root { --primary:#4a6cf7; --secondary:#6a11cb; --accent:#ff4757; --light:#f8f9fa; --dark:#333; --gray:#6c757d; }
+        body { background:#f5f7fb; color:var(--dark); line-height:1.6; }
+        .container { max-width:1200px; margin:0 auto; padding:0 20px; }
+        header { background:white; box-shadow:0 2px 15px rgba(0,0,0,.08); position:sticky; top:0; z-index:1000; }
+        .header-content { display:flex; justify-content:space-between; align-items:center; padding:15px 0; }
+        .logo { font-size:28px; font-weight:700; background:linear-gradient(135deg,var(--primary),var(--secondary)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; display:flex; align-items:center; }
+        .logo i { margin-right:10px; font-size:28px; }
+        nav ul { display:flex; list-style:none; }
+        nav ul li { margin-left:20px; }
+        nav a { color:var(--dark); text-decoration:none; font-weight:600; padding:6px 0; position:relative; }
+        nav a.active { color:var(--primary); }
+        nav a.active:after { content:''; position:absolute; bottom:-6px; left:0; width:100%; height:3px; background:var(--primary); border-radius:3px; }
+        .header-actions { display:flex; align-items:center; gap:12px; }
+        .search-box { position:relative; }
+        .search-box input { padding:10px 14px 10px 36px; border-radius:40px; border:1px solid #e6e6e6; width:220px; }
+        .search-box i { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--gray); }
+        .cart-icon, .user-icon { cursor:pointer; position:relative; }
+        .cart-count { position:absolute; top:-8px; right:-8px; background:var(--accent); color:white; width:20px; height:20px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:12px; }
+
+        .page-title { padding:36px 0 10px; text-align:left; }
+        .page-title h1 { font-size:2rem; color:var(--dark); }
+        .page-description { color:var(--gray); margin-bottom:24px; }
+
+        .categories-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; margin-bottom:60px; }
+        .category-card { background:white; border-radius:12px; overflow:hidden; box-shadow:0 8px 30px rgba(16,24,40,0.06); transition:transform .2s, box-shadow .2s; display:flex; flex-direction:column; }
+        .category-card:hover { transform:translateY(-8px); box-shadow:0 20px 40px rgba(16,24,40,0.08); }
+        .category-image { width:100%; height:160px; object-fit:cover; display:block; }
+        .category-body { padding:18px; display:flex; flex-direction:column; gap:8px; }
+        .category-title { font-size:1.15rem; font-weight:700; }
+        .category-count { color:var(--gray); font-size:0.95rem; }
+        .category-actions { margin-top:auto; display:flex; gap:10px; }
+        .btn { padding:10px 14px; border-radius:8px; cursor:pointer; border:none; font-weight:600; }
+        .btn-outline { background:transparent; border:1px solid #e6e6e6; color:var(--dark); }
+        .btn-primary { background:var(--primary); color:white; }
+
+        footer { background:#222; color:#ddd; padding:40px 0 20px; }
+        .footer-links { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:20px; margin-bottom:18px; }
+        .footer-section h4 { color:#fff; margin-bottom:8px; }
+        .footer-section a { display:block; color:#ccc; text-decoration:none; margin-bottom:6px; }
+        .copyright { text-align:center; color:#999; font-size:0.9rem; }
+
+        @media (max-width:768px){ .search-box input{width:140px;} .logo i{font-size:24px} }
+    /* Product grid (matches categories theme) */
+    .products-section { margin-top: 30px; }
+    .product-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; margin-bottom:60px; }
+    .product-card { background:white; border-radius:12px; padding:16px; box-shadow:0 8px 30px rgba(16,24,40,0.06); display:flex; flex-direction:column; transition:transform .18s, box-shadow .18s; }
+    .product-card:hover { transform:translateY(-6px); box-shadow:0 20px 40px rgba(16,24,40,0.09); }
+    .product-image { width:100%; height:160px; object-fit:contain; margin-bottom:12px; }
+    .product-title { font-weight:700; margin-bottom:6px; }
+    .product-desc { color:var(--gray); font-size:0.95rem; margin-bottom:10px; }
+    .price-badge { display:inline-block; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:white; padding:6px 12px; border-radius:20px; font-weight:700; margin-bottom:10px; }
+    .price-badge .currency { opacity:0.95; margin-right:6px; font-size:0.85rem; vertical-align:middle; }
+    .price-badge .amount { font-size:1.05rem; font-weight:800; vertical-align:middle; }
+    .product-actions { margin-top:auto; display:flex; gap:10px; }
+    .btn-small { padding:8px 12px; border-radius:8px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+    .btn-primary.small { background:var(--primary); color:white; }
+    .btn-outline.small { background:transparent; border:1px solid #e6e6e6; color:var(--dark); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><i class="fas fa-shopping-bag"></i> ShopEasy</div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="categories.html" class="active">Categories</a></li>
+                        <li><a href="deals.html">Deals</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <div class="search-box"><i class="fas fa-search"></i><input placeholder="Search categories..." /></div>
+                    <div class="user-icon"><i class="fas fa-user"></i></div>
+                    <div class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-title">
+            <h1>Shop by Category</h1>
+            <p class="page-description">Browse curated categories to find what you need faster. Each category contains top picks and curated collections.</p>
+        </div>
+
+        <section class="categories-grid" id="categoriesGrid">
+            <!-- Category cards will be generated from the products dataset below -->
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <div class="footer-section">
+                    <h4>ShopEasy</h4>
+                    <a href="about.html">About</a>
+                    <a href="careers.html">Careers</a>
+                    <a href="press.html">Press</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <a href="help.html">Help Center</a>
+                    <a href="returns.html">Returns</a>
+                    <a href="shipping.html">Shipping</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <a href="terms.html">Terms</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="security.html">Security</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <a href="#">support@shopeasy.com</a>
+                    <a href="#">1-800-SHOPEASY</a>
+                </div>
+            </div>
+            <div class="copyright">&copy; 2025 ShopEasy. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        // Small enhancement: keep nav active state accurate when opened as file
+        (function(){
+            const links = document.querySelectorAll('nav a');
+            links.forEach(a => {
+                if (a.getAttribute('href') && a.getAttribute('href').includes('categories')) {
+                    a.classList.add('active');
+                } else {
+                    a.classList.remove('active');
+                }
+            });
+        })();
+
+        // Full products dataset (from Product.html)
+        const products = [
+  { id: 1, name: "Smartphone", category: "electronics", price: "$499", img: "images/smartphone.jpg", description: "A high-end smartphone with great features." },
+  { id: 2, name: "Headphones", category: "electronics", price: "$99", img: "images/headphones.jpg", description: "Noise-cancelling headphones for music lovers." },
+  { id: 3, name: "Laptop", category: "electronics", price: "$899", img: "images/laptop.jpg", description: "Powerful laptop for work and play." },
+  { id: 4, name: "Smartwatch", category: "electronics", price: "$199", img: "images/watch.jpg", description: "Track your fitness and notifications." },
+  { id: 5, name: "T-Shirt", category: "fashion", price: "$25", img: "images/tshirt.jpg", description: "Comfortable cotton T-shirt." },
+  { id: 6, name: "Sneakers", category: "fashion", price: "$120", img: "images/sneakers.jpg", description: "Trendy sneakers for everyday wear." },
+  { id: 7, name: "Jeans", category: "fashion", price: "$60", img: "images/jeans.jpg", description: "Classic denim jeans." },
+  { id: 8, name: "Jacket", category: "fashion", price: "$150", img: "images/jacket.jpg", description: "Warm and stylish jacket." },
+  { id: 9, name: "Sofa", category: "home", price: "$799", img: "images/sofa.jpg", description: "Stylish and comfortable sofa." },
+  { id: 10, name: "Dining Table", category: "home", price: "$499", img: "images/dining_table.jpg", description: "Elegant dining table for family meals." },
+  { id: 11, name: "Lamp", category: "home", price: "$45", img: "images/lamp.jpg", description: "Modern bedside lamp." },
+  { id: 12, name: "Cookware Set", category: "home", price: "$120", img: "images/cookware_set.jpg", description: "Durable non-stick cookware set." },
+  { id: 13, name: "Football", category: "sports", price: "$30", img: "images/cricket_kit.jpg", description: "Cricket kit." },
+  { id: 14, name: "Tennis Racket", category: "sports", price: "$80", img: "images/tennis_racket.jpg", description: "Lightweight racket for all levels." },
+  { id: 15, name: "Yoga Mat", category: "sports", price: "$25", img: "images/yoga_mat.jpg", description: "Non-slip yoga mat." },
+  { id: 16, name: "Dumbbell Set", category: "sports", price: "$100", img: "images/dumbbell_set.jpg", description: "Adjustable dumbbell set." },
+  { id: 17, name: "Novel - Mystery", category: "books", price: "$15", img: "images/novel_mystery.jpg", description: "Thrilling mystery novel." },
+  { id: 18, name: "Science Book", category: "books", price: "$20", img: "images/science_book.jpg", description: "Explore the wonders of science." },
+  { id: 19, name: "Cookbook", category: "books", price: "$18", img: "images/cookbook.jpg", description: "Delicious recipes from around the world." },
+  { id: 20, name: "Children's Storybook", category: "books", price: "$12", img: "images/child_storybook.jpg", description: "Fun stories for kids." },
+  { id: 21, name: "Bluetooth Speaker", category: "electronics", price: "$70", img: "images/bluetooth_speaker.jpg", description: "Portable speaker with rich sound." },
+  { id: 22, name: "Gaming Console", category: "electronics", price: "$399", img: "images/gaming_console.jpg", description: "Next-gen gaming console." }
+];
+
+        // Build categories from products (using product.category values)
+        function buildCategories() {
+            const map = new Map();
+            products.forEach(p => {
+                // Normalize category names for display
+                const raw = p.category || 'Other';
+                const key = (raw.charAt(0).toUpperCase() + raw.slice(1)).replace(/\b\w/g, c => c.toUpperCase());
+                if (!map.has(key)) map.set(key, { name: key, count: 0, image: p.img });
+                const entry = map.get(key);
+                entry.count += 1;
+                if (!entry.image && p.img) entry.image = p.img;
+            });
+
+            const container = document.getElementById('categoriesGrid');
+            container.innerHTML = '';
+            Array.from(map.values()).forEach(cat => {
+                const card = document.createElement('article');
+                card.className = 'category-card';
+                card.innerHTML = `
+                    <img class="category-image" src="${cat.image || 'https://images.unsplash.com/photo-1505691723518-36a9b4e29c10?auto=format&fit=crop&w=800&q=60'}" alt="${cat.name}">
+                    <div class="category-body">
+                        <div class="category-title">${cat.name}</div>
+                        <div class="category-count">${cat.count} product${cat.count>1?'s':''}</div>
+                        <div class="category-actions">
+                            <button class="btn btn-primary explore-btn" data-category="${cat.name}">Explore</button>
+                            <a class="btn btn-outline" href="#">Top Picks</a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Attach explore handlers
+            document.querySelectorAll('.explore-btn').forEach(b => b.addEventListener('click', (e) => {
+                const category = e.currentTarget.getAttribute('data-category');
+                showProductsForCategory(category);
+            }));
+        }
+
+        // Render products for a category
+        function showProductsForCategory(categoryName) {
+            // Hide categories and show product section
+            document.querySelector('.page-title').style.display = 'none';
+            document.getElementById('categoriesGrid').style.display = 'none';
+
+            // Create products section if not present
+            let sec = document.getElementById('productsSection');
+            if (!sec) {
+                sec = document.createElement('section');
+                sec.className = 'products-section';
+                sec.id = 'productsSection';
+                sec.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin:20px 0;"><h2 style="margin:0">${categoryName}</h2><button id="backToCategories" class="btn btn-outline">Back</button></div><div id="productList" class="product-grid"></div>`;
+                document.querySelector('main.container').appendChild(sec);
+                document.getElementById('backToCategories').addEventListener('click', () => { sec.remove(); document.querySelector('.page-title').style.display='block'; document.getElementById('categoriesGrid').style.display='grid'; });
+            }
+
+            const list = document.getElementById('productList');
+            list.innerHTML = '';
+
+            // Match products by normalized category
+            const norm = categoryName.toLowerCase();
+            const matched = products.filter(p => p.category.toLowerCase().includes(norm) || categoryName.toLowerCase().includes(p.category.toLowerCase()));
+
+            if (matched.length === 0) {
+                list.innerHTML = '<p>No products in this category.</p>';
+                return;
+            }
+
+            // small helper to format price strings into currency + amount spans
+            function formatPrice(price) {
+                if (!price) return '';
+                // Accept formats like "$499", "499", "USD 499"
+                const str = String(price).trim();
+                const m = str.match(/([A-Za-z$€£₹¥]{1,3})?\s*([0-9,.]+)/);
+                if (m) {
+                    const currency = m[1] || '$';
+                    const amount = m[2];
+                    return `<span class="currency">${currency}</span><span class="amount">${amount}</span>`;
+                }
+                return `<span class="amount">${str}</span>`;
+            }
+
+            matched.forEach(p => {
+                const card = document.createElement('article');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <img class="product-image" src="${p.img}" alt="${p.name}">
+                    <div class="product-title">${p.name}</div>
+                    <div class="product-desc">${p.description || ''}</div>
+                    <div class="price-badge">${formatPrice(p.price)}</div>
+                    <div class="product-actions">
+                        <a class="btn-small btn-primary small" href="#">Add to Cart</a>
+                        <a class="btn-small btn-outline small" href="detail.html?id=${p.id}">View</a>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        // Initialize categories
+        buildCategories();
+    </script>
+</body>
+</html>

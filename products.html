@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopEasy - Products</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Lodex theme variables */
+    * { box-sizing: border-box; margin:0; padding:0; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --primary:#4a6cf7; --secondary:#6a11cb; --accent:#ff4757; --dark:#333; --gray:#6c757d; --light:#f8f9fa; }
+    body { background:var(--light); color:var(--dark); line-height:1.6; }
+    .container { max-width:1200px; margin:0 auto; padding:0 20px; }
+
+    /* Header */
+    header { background:white; box-shadow:0 2px 12px rgba(0,0,0,0.06); position:sticky; top:0; z-index:1000; }
+    .header-content { display:flex; justify-content:space-between; align-items:center; padding:14px 0; }
+    .logo { font-size:26px; font-weight:700; background:linear-gradient(135deg,var(--primary),var(--secondary)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; display:flex; align-items:center; }
+    .logo i { margin-right:8px; font-size:26px; }
+    nav ul { display:flex; list-style:none; }
+    nav ul li { margin-left:20px; }
+    nav a { text-decoration:none; color:var(--dark); font-weight:600; }
+    .header-actions { display:flex; align-items:center; gap:12px; }
+    .search-box { position:relative; }
+    .search-box input { padding:10px 14px 10px 36px; border-radius:40px; border:1px solid #e6e6e6; width:260px; }
+    .search-box i { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--gray); }
+    .cart-count { position:absolute; top:-8px; right:-8px; background:var(--accent); color:white; width:20px; height:20px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:12px; }
+
+    /* Controls */
+    .controls { display:flex; gap:12px; align-items:center; }
+    select, input[type=text] { padding:10px 12px; border-radius:10px; border:1px solid #e6e6e6; }
+
+    /* Products grid (lodex style) */
+    main { padding:36px 0; }
+    .page-title { margin-bottom:18px; }
+    .page-title h1 { font-size:1.6rem; }
+
+    .product-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:20px; }
+    .product-card { background:white; border-radius:12px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.06); padding:14px; display:flex; flex-direction:column; transition:transform .18s ease, box-shadow .18s ease; }
+    .product-card:hover { transform:translateY(-8px); box-shadow:0 20px 40px rgba(0,0,0,0.08); }
+    .product-image { width:100%; height:160px; object-fit:contain; background: #fff; margin-bottom:12px; }
+    .product-title { font-weight:700; margin-bottom:6px; }
+    .product-desc { color:var(--gray); font-size:0.95rem; margin-bottom:10px; min-height:40px; }
+  .price-badge { display:inline-block; background:linear-gradient(90deg,var(--primary),var(--secondary)); color:white; padding:6px 12px; border-radius:20px; font-weight:700; margin-bottom:10px; }
+  .price-badge .currency { opacity:0.95; margin-right:6px; font-size:0.85rem; vertical-align:middle; }
+  .price-badge .amount { font-size:1.05rem; font-weight:800; vertical-align:middle; }
+    .product-actions { margin-top:auto; display:flex; gap:8px; }
+    .btn { padding:10px 12px; border-radius:8px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+    .btn-primary { background:var(--primary); color:white; border: none; }
+    .btn-outline { background:transparent; border:1px solid #e6e6e6; color:var(--dark); }
+
+    footer { background:var(--dark); color:#ddd; padding:40px 0; margin-top:30px; }
+    .footer-content { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:20px; margin-bottom:18px; }
+
+    @media (max-width:768px){ .search-box input{width:140px;} .header-content{flex-direction:column;align-items:stretch;} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo"><i class="fas fa-shopping-bag"></i> ShopEasy</div>
+        <nav>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html" class="active">Products</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="deals.html">Deals</a></li>
+          </ul>
+        </nav>
+        <div class="header-actions">
+          <div class="search-box"><i class="fas fa-search"></i><input id="searchBoxHeader" placeholder="Search products..." /></div>
+          <div style="position:relative"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-title"><h1>Products</h1></div>
+
+    <div class="controls" style="margin-bottom:18px;">
+      <input type="text" id="searchBar" placeholder="Search products..." />
+      <select id="categoryFilter">
+        <option value="all">All Categories</option>
+        <option value="electronics">Electronics</option>
+        <option value="fashion">Fashion</option>
+        <option value="home">Home</option>
+        <option value="sports">Sports</option>
+        <option value="books">Books</option>
+      </select>
+    </div>
+
+    <section id="productGrid" class="product-grid"></section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div>
+          <h3 style="color:white">ShopEasy</h3>
+          <p style="color:#bbb">Quality products, great prices, excellent service.</p>
+        </div>
+        <div>
+          <h4 style="color:white">Support</h4>
+          <a href="#">Help Center</a>
+          <a href="#">Returns</a>
+        </div>
+        <div>
+          <h4 style="color:white">Company</h4>
+          <a href="#">About</a>
+          <a href="#">Careers</a>
+        </div>
+      </div>
+      <div style="text-align:center;color:#999">&copy; 2025 ShopEasy. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    // Product dataset (from products.html)
+    const products = [
+  { id: 1, name: "Smartphone", category: "electronics", price: "$499", img: "images/smartphone.jpg", description: "A high-end smartphone with great features." },
+  { id: 2, name: "Headphones", category: "electronics", price: "$99", img: "images/headphones.jpg", description: "Noise-cancelling headphones for music lovers." },
+  { id: 3, name: "Laptop", category: "electronics", price: "$899", img: "images/laptop.jpg", description: "Powerful laptop for work and play." },
+  { id: 4, name: "Smartwatch", category: "electronics", price: "$199", img: "images/watch.jpg", description: "Track your fitness and notifications." },
+  { id: 5, name: "T-Shirt", category: "fashion", price: "$25", img: "images/tshirt.jpg", description: "Comfortable cotton T-shirt." },
+  { id: 6, name: "Sneakers", category: "fashion", price: "$120", img: "images/sneakers.jpg", description: "Trendy sneakers for everyday wear." },
+  { id: 7, name: "Jeans", category: "fashion", price: "$60", img: "images/jeans.jpg", description: "Classic denim jeans." },
+  { id: 8, name: "Jacket", category: "fashion", price: "$150", img: "images/jacket.jpg", description: "Warm and stylish jacket." },
+  { id: 9, name: "Sofa", category: "home", price: "$799", img: "images/sofa.jpg", description: "Stylish and comfortable sofa." },
+  { id: 10, name: "Dining Table", category: "home", price: "$499", img: "images/dining_table.jpg", description: "Elegant dining table for family meals." },
+  { id: 11, name: "Lamp", category: "home", price: "$45", img: "images/lamp.jpg", description: "Modern bedside lamp." },
+  { id: 12, name: "Cookware Set", category: "home", price: "$120", img: "images/cookware_set.jpg", description: "Durable non-stick cookware set." },
+  { id: 13, name: "Football", category: "sports", price: "$30", img: "images/cricket_kit.jpg", description: "Cricket kit." },
+  { id: 14, name: "Tennis Racket", category: "sports", price: "$80", img: "images/tennis_racket.jpg", description: "Lightweight racket for all levels." },
+  { id: 15, name: "Yoga Mat", category: "sports", price: "$25", img: "images/yoga_mat.jpg", description: "Non-slip yoga mat." },
+  { id: 16, name: "Dumbbell Set", category: "sports", price: "$100", img: "images/dumbbell_set.jpg", description: "Adjustable dumbbell set." },
+  { id: 17, name: "Novel - Mystery", category: "books", price: "$15", img: "images/novel_mystery.jpg", description: "Thrilling mystery novel." },
+  { id: 18, name: "Science Book", category: "books", price: "$20", img: "images/science_book.jpg", description: "Explore the wonders of science." },
+  { id: 19, name: "Cookbook", category: "books", price: "$18", img: "images/cookbook.jpg", description: "Delicious recipes from around the world." },
+  { id: 20, name: "Children's Storybook", category: "books", price: "$12", img: "images/child_storybook.jpg", description: "Fun stories for kids." },
+  { id: 21, name: "Bluetooth Speaker", category: "electronics", price: "$70", img: "images/bluetooth_speaker.jpg", description: "Portable speaker with rich sound." },
+  { id: 22, name: "Gaming Console", category: "electronics", price: "$399", img: "images/gaming_console.jpg", description: "Next-gen gaming console." }
+];
+
+  const grid = document.getElementById('productGrid');
+  const filter = document.getElementById('categoryFilter');
+  const searchBar = document.getElementById('searchBar');
+  const searchBoxHeader = document.getElementById('searchBoxHeader');
+
+  function formatPrice(price) {
+    if (!price) return '';
+    const str = String(price).trim();
+    const m = str.match(/([A-Za-z$€£₹¥]{1,3})?\s*([0-9,.]+)/);
+    if (m) {
+      const currency = m[1] || '$';
+      const amount = m[2];
+      return `<span class="currency">${currency}</span><span class="amount">${amount}</span>`;
+    }
+    return `<span class="amount">${str}</span>`;
+  }
+
+  function renderProducts(category = 'all', search = '') {
+    grid.innerHTML = '';
+    const filtered = products.filter(p => {
+      const matchesCategory = category === 'all' || p.category === category;
+      const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<p>No products found.</p>';
+      return;
+    }
+
+    filtered.forEach(p => {
+      const card = document.createElement('article');
+      card.className = 'product-card';
+      card.setAttribute('data-name', (p.name || '').toLowerCase());
+      card.innerHTML = `
+        <img class="product-image" src="${p.img}" alt="${p.name}">
+        <div class="product-title">${p.name}</div>
+        <div class="product-desc">${p.description || ''}</div>
+        <div class="price-badge">${formatPrice(p.price)}</div>
+        <div class="product-actions">
+          <button class="btn btn-primary add-to-cart" data-id="${p.id}">Add to Cart</button>
+          <button class="btn btn-outline add-to-wishlist" data-id="${p.id}">Add to Wishlist</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    // Add to cart listeners
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = parseInt(e.currentTarget.getAttribute('data-id'));
+        const prod = products.find(x => x.id === id);
+        if (!prod) return;
+
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existing = cart.find(i => i.id === id);
+        if (existing) {
+          existing.quantity += 1;
+        } else {
+          cart.push({ id: prod.id, name: prod.name, price: prod.price, image: prod.img, quantity: 1 });
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        const cc = document.querySelector('.cart-count');
+        if (cc) cc.textContent = cart.reduce((s, i) => s + i.quantity, 0);
+
+        const notification = document.createElement('div');
+        notification.textContent = `${prod.name} added to cart`;
+        notification.style.position = 'fixed';
+        notification.style.right = '20px';
+        notification.style.bottom = '20px';
+        notification.style.background = '#4a6cf7';
+        notification.style.color = 'white';
+        notification.style.padding = '10px 14px';
+        notification.style.borderRadius = '6px';
+        notification.style.zIndex = 2000;
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 2500);
+      });
+    });
+
+    // Add to wishlist listeners
+    document.querySelectorAll('.add-to-wishlist').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = parseInt(e.currentTarget.getAttribute('data-id'));
+        const prod = products.find(x => x.id === id);
+        if (!prod) return;
+
+        const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        const exists = wishlist.find(i => i.id === id);
+        if (!exists) {
+          wishlist.push({ id: prod.id, name: prod.name, price: prod.price, image: prod.img });
+          localStorage.setItem('wishlist', JSON.stringify(wishlist));
+
+          const notification = document.createElement('div');
+          notification.textContent = `${prod.name} added to wishlist`;
+          notification.style.position = 'fixed';
+          notification.style.right = '20px';
+          notification.style.bottom = '20px';
+          notification.style.background = '#ff4081';
+          notification.style.color = 'white';
+          notification.style.padding = '10px 14px';
+          notification.style.borderRadius = '6px';
+          notification.style.zIndex = 2000;
+          document.body.appendChild(notification);
+          setTimeout(() => notification.remove(), 2500);
+        } else {
+          const notification = document.createElement('div');
+          notification.textContent = `${prod.name} is already in your wishlist`;
+          notification.style.position = 'fixed';
+          notification.style.right = '20px';
+          notification.style.bottom = '20px';
+          notification.style.background = '#999';
+          notification.style.color = 'white';
+          notification.style.padding = '10px 14px';
+          notification.style.borderRadius = '6px';
+          notification.style.zIndex = 2000;
+          document.body.appendChild(notification);
+          setTimeout(() => notification.remove(), 2500);
+        }
+      });
+    });
+  }
+
+  // Event listeners
+  filter.addEventListener('change', () => renderProducts(filter.value, searchBar.value));
+  searchBar.addEventListener('input', () => renderProducts(filter.value, searchBar.value));
+  searchBoxHeader.addEventListener('input', (e) => {
+    searchBar.value = e.target.value;
+    renderProducts(filter.value, searchBar.value);
+  });
+
+  // Initial render
+  renderProducts();
+</script>
+</body>
+</html>

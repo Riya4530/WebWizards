@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ShopEasy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4a6cf7;
+            --secondary: #6a11cb;
+            --accent: #ff4757;
+            --light: #f8f9fa;
+            --dark: #333;
+            --gray: #6c757d;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #3a5ce5;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Admin Login Styles */
+        .admin-login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+        }
+
+        .admin-login-form {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .admin-login-form h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--dark);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.2);
+        }
+
+        .admin-login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .admin-login-btn:hover {
+            background-color: #3a5ce5;
+        }
+
+        .admin-error {
+            color: var(--danger);
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+
+        /* Admin Dashboard Styles */
+        .admin-header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .admin-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .admin-logo i {
+            margin-right: 10px;
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        .admin-nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .admin-nav a:hover, .admin-nav a.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .admin-logout {
+            background: none;
+            border: none;
+            color: var(--dark);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        .admin-sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+        }
+
+        .admin-sidebar-menu {
+            list-style: none;
+        }
+
+        .admin-sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .admin-sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: all 0.3s;
+        }
+
+        .admin-sidebar-menu a:hover, .admin-sidebar-menu a.active {
+            background-color: #f0f4ff;
+            color: var(--primary);
+            border-right: 3px solid var(--primary);
+        }
+
+        .admin-sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .admin-content {
+            flex: 1;
+            padding: 30px;
+            background-color: #f5f7fb;
+        }
+
+        .admin-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .admin-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .admin-section-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+        }
+
+        .stat-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .stat-info p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* Tables */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .admin-table th, .admin-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .admin-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .admin-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Forms */
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 500px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .admin-container {
+                flex-direction: column;
+            }
+            
+            .admin-sidebar {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            
+            .admin-sidebar-menu {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .admin-sidebar-menu li {
+                margin-bottom: 0;
+                margin-right: 10px;
+            }
+            
+            .admin-sidebar-menu a {
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .admin-nav {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Login Page (shown by default) -->
+    <div id="adminLoginPage" class="admin-login-container">
+        <div class="admin-login-form">
+            <h2><i class="fas fa-lock"></i> Admin Login</h2>
+            <div class="form-group">
+                <label for="adminUsername">Username</label>
+                <input type="text" id="adminUsername" placeholder="Enter admin username">
+            </div>
+            <div class="form-group">
+                <label for="adminPassword">Password</label>
+                <input type="password" id="adminPassword" placeholder="Enter admin password">
+            </div>
+            <button class="admin-login-btn" id="adminLoginBtn">Login</button>
+            <div class="admin-error" id="adminError">Invalid username or password</div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard (hidden by default) -->
+    <div id="adminDashboard" style="display: none;">
+        <!-- Admin Header -->
+        <header class="admin-header">
+            <div class="container">
+                <div class="admin-header-content">
+                    <div class="admin-logo">
+                        <i class="fas fa-cog"></i> ShopEasy Admin
+                    </div>
+                    <nav class="admin-nav">
+                        <a href="#" class="active" data-section="dashboard">Dashboard</a>
+                        <a href="#" data-section="products">Products</a>
+                        <a href="#" data-section="orders">Orders</a>
+                        <a href="#" data-section="users">Users</a>
+                    </nav>
+                    <div class="admin-user">
+                        <div class="admin-avatar" id="adminAvatar">A</div>
+                        <span id="adminName">Admin</span>
+                        <button class="admin-logout" id="adminLogoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Admin Content -->
+        <div class="admin-container">
+            <!-- Sidebar -->
+            <aside class="admin-sidebar">
+                <ul class="admin-sidebar-menu">
+                    <li><a href="dashboard.html" class="active" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#" data-section="products"><i class="fas fa-box"></i> Products</a></li>
+                    <li><a href="#" data-section="orders"><i class="fas fa-shopping-bag"></i> Orders</a></li>
+                    <li><a href="#" data-section="users"><i class="fas fa-users"></i> Users</a></li>
+                    <li><a href="#" data-section="analytics"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                    <li><a href="#" data-section="settings"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="admin-content">
+                <!-- Dashboard Section -->
+                <section id="dashboardSection" class="admin-section">
+                    <div class="admin-section-header">
+                        <h2 class="admin-section-title">Dashboard Overview</h2>
+                        <div>Today: <span id="currentDate"></span></div>
+                    </div>
+                    
+                    <!-- Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #e3f2fd; color: #2196f3;">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalOrders">0</h3>
+                                <p>Total Orders</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #e8f5e9; color: #4caf50;">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalProducts">0</h3>
+                                <p>Total Products</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #fff3e0; color: #ff9800;">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalUsers">0</h3>
+                                <p>Total Users</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #fce4ec; color: #e91e63;">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalRevenue">$0</h3>
+                                <p>Total Revenue</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders -->
+                    <div class="admin-section">
+                        <div class="admin-section-header">
+                            <h2 class="admin-section-title">Recent Orders</h2>
+                            <button class="btn btn-primary" id="viewAllOrdersBtn">View All</button>
+                        </div>
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentOrdersTable">
+                                <!-- Orders will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Products Section -->
+                <section id="productsSection" class="admin-section" style="display: none;">
+                    <div class="admin-section-header">
+                        <h2 class="admin-section-title">Product Management</h2>
+                        <button class="btn btn-primary" id="addProductBtn">Add New Product</button>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTable">
+                            <!-- Products will be populated here -->
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Orders Section -->
+                <section id="ordersSection" class="admin-section" style="display: none;">
+                    <div class="admin-section-header">
+                        <h2 class="admin-section-title">Order Management</h2>
+                        <div>
+                            <select id="orderFilter">
+                                <option value="all">All Orders</option>
+                                <option value="pending">Pending</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Items</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTable">
+                            <!-- Orders will be populated here -->
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Users Section -->
+                <section id="usersSection" class="admin-section" style="display: none;">
+                    <div class="admin-section-header">
+                        <h2 class="admin-section-title">User Management</h2>
+                        <button class="btn btn-primary" id="addUserBtn">Add New User</button>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Joined</th>
+                                <th>Orders</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable">
+                            <!-- Users will be populated here -->
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Analytics Section -->
+                <section id="analyticsSection" class="admin-section" style="display: none;">
+                    <div class="admin-section-header">
+                        <h2 class="admin-section-title">Sales Analytics</h2>
+                        <div>
+                            <select id="analyticsPeriod">
+                                <option value="7">Last 7 Days</option>
+                                <option value="30">Last 30 Days</option>
+                                <option value="90">Last 90 Days</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="height: 300px; background: #f8f9fa; display: flex; justify-content: center; align-items: center; border-radius: 5px;">
+                        <p>Sales chart would be displayed here</p>
+                    </div>
+                </section>
+
+                <!-- Settings Section -->
+                <section id="settingsSection" class="admin-section" style="display: none;">
+                    <div class="admin-section-header">
+                        <h2 class="admin-section-title">Admin Settings</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="siteName">Site Name</label>
+                        <input type="text" id="siteName" value="ShopEasy" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminEmail">Admin Email</label>
+                        <input type="email" id="adminEmail" value="admin@shopeasy.com" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="currency">Currency</label>
+                        <select id="currency" class="form-control">
+                            <option value="USD">USD ($)</option>
+                            <option value="EUR">EUR (€)</option>
+                            <option value="GBP">GBP (£)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary">Save Settings</button>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="productModalTitle">Add New Product</h3>
+                <button class="close-modal" id="closeProductModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productName">Product Name</label>
+                            <input type="text" id="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productCategory">Category</label>
+                            <select id="productCategory" required>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Home">Home</option>
+                                <option value="Sports">Sports</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productPrice">Price ($)</label>
+                            <input type="number" id="productPrice" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productStock">Stock</label>
+                            <input type="number" id="productStock" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="productDescription">Description</label>
+                        <textarea id="productDescription" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="productImage">Image URL</label>
+                        <input type="text" id="productImage" placeholder="https://example.com/image.jpg">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelProductBtn">Cancel</button>
+                <button class="btn btn-primary" id="saveProductBtn">Save Product</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Order Details - <span id="orderModalId"></span></h3>
+                <button class="close-modal" id="closeOrderModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="order-info">
+                    <h4>Customer Information</h4>
+                    <p><strong>Name:</strong> <span id="orderCustomerName"></span></p>
+                    <p><strong>Email:</strong> <span id="orderCustomerEmail"></span></p>
+                    <p><strong>Shipping Address:</strong> <span id="orderShippingAddress"></span></p>
+                </div>
+                <div class="order-items" style="margin-top: 20px;">
+                    <h4>Order Items</h4>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderItemsList">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="order-summary" style="margin-top: 20px; text-align: right;">
+                    <p><strong>Subtotal: $<span id="orderSubtotal">0.00</span></strong></p>
+                    <p><strong>Shipping: $<span id="orderShipping">0.00</span></strong></p>
+                    <p><strong>Total: $<span id="orderTotal">0.00</span></strong></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <select id="orderStatusSelect">
+                    <option value="pending">Pending</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+                <button class="btn btn-primary" id="updateOrderStatusBtn">Update Status</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin credentials (in a real app, this would be handled server-side)
+        const adminCredentials = {
+            username: "admin",
+            password: "admin123"
+        };
+
+        // Sample data for demonstration
+        let adminData = {
+            products: JSON.parse(localStorage.getItem('products')) || [
+                {
+                    id: 1,
+                    name: "Wireless Bluetooth Headphones",
+                    price: 79.99,
+                    category: "Electronics",
+                    stock: 50,
+                    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aGVhZHBob25lc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
+                },
+                {
+                    id: 2,
+                    name: "Smart Fitness Watch",
+                    price: 129.99,
+                    category: "Electronics",
+                    stock: 30,
+                    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8d2F0Y2h8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
+                }
+            ],
+            orders: JSON.parse(localStorage.getItem('allOrders')) || [
+                {
+                    id: "ORD-001",
+                    customer: { name: "Hermione Granger", email: "hermiron19@gryffindors.com" },
+                    date: "2023-10-15",
+                    items: [
+                        { name: "Wireless Bluetooth Headphones", quantity: 1, price: 79.99 },
+                        { name: "Laptop Backpack", quantity: 1, price: 49.99 }
+                    ],
+                    total: 129.98,
+                    status: "completed",
+                    shippingAddress: "123 Main St, City, State 12345"
+                },
+                {
+                    id: "ORD-002",
+                    customer: { name: "Harry Potter", email: "thechoseone@gryffindors.com" },
+                    date: "2023-10-18",
+                    items: [
+                        { name: "Smart Fitness Watch", quantity: 1, price: 129.99 }
+                    ],
+                    total: 129.99,
+                    status: "pending",
+                    shippingAddress: "456 Oak Ave, City, State 12345"
+                }
+            ],
+            users: JSON.parse(localStorage.getItem('users')) || [
+                { id: 1, name: "John Doe", email: "john@example.com", joined: "2023-01-15", orders: 5, status: "active" },
+                { id: 2, name: "Jane Smith", email: "jane@example.com", joined: "2023-03-22", orders: 3, status: "active" },
+                { id: 3, name: "Bob Johnson", email: "bob@example.com", joined: "2023-07-10", orders: 1, status: "inactive" }
+            ]
+        };
+
+        // DOM elements
+        const adminLoginPage = document.getElementById('adminLoginPage');
+        const adminDashboard = document.getElementById('adminDashboard');
+        const adminUsername = document.getElementById('adminUsername');
+        const adminPassword = document.getElementById('adminPassword');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const adminError = document.getElementById('adminError');
+        const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+        const adminAvatar = document.getElementById('adminAvatar');
+        const adminName = document.getElementById('adminName');
+        const currentDate = document.getElementById('currentDate');
+        
+        // Stats elements
+        const totalOrders = document.getElementById('totalOrders');
+        const totalProducts = document.getElementById('totalProducts');
+        const totalUsers = document.getElementById('totalUsers');
+        const totalRevenue = document.getElementById('totalRevenue');
+        
+        // Table elements
+        const recentOrdersTable = document.getElementById('recentOrdersTable');
+        const productsTable = document.getElementById('productsTable');
+        const ordersTable = document.getElementById('ordersTable');
+        const usersTable = document.getElementById('usersTable');
+        
+        // Navigation elements
+        const navLinks = document.querySelectorAll('.admin-nav a, .admin-sidebar-menu a');
+        const sections = document.querySelectorAll('.admin-section');
+        
+        // Modal elements
+        const productModal = document.getElementById('productModal');
+        const productModalTitle = document.getElementById('productModalTitle');
+        const productForm = document.getElementById('productForm');
+        const closeProductModal = document.getElementById('closeProductModal');
+        const cancelProductBtn = document.getElementById('cancelProductBtn');
+        const saveProductBtn = document.getElementById('saveProductBtn');
+        const addProductBtn = document.getElementById('addProductBtn');
+        
+        const orderModal = document.getElementById('orderModal');
+        const closeOrderModal = document.getElementById('closeOrderModal');
+        const orderModalId = document.getElementById('orderModalId');
+        const orderCustomerName = document.getElementById('orderCustomerName');
+        const orderCustomerEmail = document.getElementById('orderCustomerEmail');
+        const orderShippingAddress = document.getElementById('orderShippingAddress');
+        const orderItemsList = document.getElementById('orderItemsList');
+        const orderSubtotal = document.getElementById('orderSubtotal');
+        const orderShipping = document.getElementById('orderShipping');
+        const orderTotal = document.getElementById('orderTotal');
+        const orderStatusSelect = document.getElementById('orderStatusSelect');
+        const updateOrderStatusBtn = document.getElementById('updateOrderStatusBtn');
+        
+        const viewAllOrdersBtn = document.getElementById('viewAllOrdersBtn');
+        const orderFilter = document.getElementById('orderFilter');
+        
+        // Current editing product/order
+        let currentEditingProduct = null;
+        let currentEditingOrder = null;
+
+        // Set current date
+        currentDate.textContent = new Date().toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+
+        // Admin login functionality
+        adminLoginBtn.addEventListener('click', () => {
+            const username = adminUsername.value;
+            const password = adminPassword.value;
+            
+            if (username === adminCredentials.username && password === adminCredentials.password) {
+                // Successful login
+                adminLoginPage.style.display = 'none';
+                adminDashboard.style.display = 'block';
+                adminError.style.display = 'none';
+                
+                // Initialize dashboard
+                updateDashboardStats();
+                displayRecentOrders();
+                displayProducts();
+                displayOrders();
+                displayUsers();
+            } else {
+                // Failed login
+                adminError.style.display = 'block';
+            }
+        });
+
+        // Admin logout functionality
+        adminLogoutBtn.addEventListener('click', () => {
+            adminDashboard.style.display = 'none';
+            adminLoginPage.style.display = 'flex';
+            adminUsername.value = '';
+            adminPassword.value = '';
+        });
+
+        // Navigation functionality
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Update active nav link
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                // Show corresponding section
+                const sectionId = link.getAttribute('data-section') + 'Section';
+                sections.forEach(section => {
+                    section.style.display = 'none';
+                });
+                document.getElementById(sectionId).style.display = 'block';
+            });
+        });
+
+        // Update dashboard stats
+        function updateDashboardStats() {
+            totalOrders.textContent = adminData.orders.length;
+            totalProducts.textContent = adminData.products.length;
+            totalUsers.textContent = adminData.users.length;
+            
+            const revenue = adminData.orders
+                .filter(order => order.status === 'completed')
+                .reduce((sum, order) => sum + order.total, 0);
+            totalRevenue.textContent = '$' + revenue.toFixed(2);
+        }
+
+        // Display recent orders
+        function displayRecentOrders() {
+            recentOrdersTable.innerHTML = '';
+            
+            // Get recent orders (last 5)
+            const recentOrders = adminData.orders.slice(0, 5);
+            
+            recentOrders.forEach(order => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${order.id}</td>
+                    <td>${order.customer.name}</td>
+                    <td>${new Date(order.date).toLocaleDateString()}</td>
+                    <td>$${order.total.toFixed(2)}</td>
+                    <td><span class="status status-${order.status}">${order.status}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-primary view-order-btn" data-id="${order.id}">View</button>
+                    </td>
+                `;
+                recentOrdersTable.appendChild(row);
+            });
+            
+            // Add event listeners to view buttons
+            document.querySelectorAll('.view-order-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const orderId = btn.getAttribute('data-id');
+                    viewOrder(orderId);
+                });
+            });
+        }
+
+        // Display products
+        function displayProducts() {
+            productsTable.innerHTML = '';
+            
+            adminData.products.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.id}</td>
+                    <td><img src="${product.image}" alt="${product.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;"></td>
+                    <td>${product.name}</td>
+                    <td>${product.category}</td>
+                    <td>$${product.price.toFixed(2)}</td>
+                    <td>${product.stock}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary edit-product-btn" data-id="${product.id}">Edit</button>
+                        <button class="btn btn-sm btn-danger delete-product-btn" data-id="${product.id}">Delete</button>
+                    </td>
+                `;
+                productsTable.appendChild(row);
+            });
+            
+            // Add event listeners to edit and delete buttons
+            document.querySelectorAll('.edit-product-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const productId = parseInt(btn.getAttribute('data-id'));
+                    editProduct(productId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-product-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const productId = parseInt(btn.getAttribute('data-id'));
+                    deleteProduct(productId);
+                });
+            });
+        }
+
+        // Display orders
+        function displayOrders() {
+            ordersTable.innerHTML = '';
+            
+            const filter = orderFilter.value;
+            const filteredOrders = filter === 'all' 
+                ? adminData.orders 
+                : adminData.orders.filter(order => order.status === filter);
+            
+            filteredOrders.forEach(order => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${order.id}</td>
+                    <td>${order.customer.name}</td>
+                    <td>${new Date(order.date).toLocaleDateString()}</td>
+                    <td>${order.items.length} items</td>
+                    <td>$${order.total.toFixed(2)}</td>
+                    <td><span class="status status-${order.status}">${order.status}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-primary view-order-btn" data-id="${order.id}">View</button>
+                    </td>
+                `;
+                ordersTable.appendChild(row);
+            });
+            
+            // Add event listeners to view buttons
+            document.querySelectorAll('.view-order-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const orderId = btn.getAttribute('data-id');
+                    viewOrder(orderId);
+                });
+            });
+        }
+
+        // Display users
+        function displayUsers() {
+            usersTable.innerHTML = '';
+            
+            adminData.users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${new Date(user.joined).toLocaleDateString()}</td>
+                    <td>${user.orders}</td>
+                    <td><span class="status status-${user.status}">${user.status}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-warning">Edit</button>
+                        <button class="btn btn-sm btn-danger">Delete</button>
+                    </td>
+                `;
+                usersTable.appendChild(row);
+            });
+        }
+
+        // View order details
+        function viewOrder(orderId) {
+            const order = adminData.orders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            currentEditingOrder = order;
+            
+            orderModalId.textContent = order.id;
+            orderCustomerName.textContent = order.customer.name;
+            orderCustomerEmail.textContent = order.customer.email;
+            orderShippingAddress.textContent = order.shippingAddress;
+            
+            // Clear and populate order items
+            orderItemsList.innerHTML = '';
+            order.items.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${item.price.toFixed(2)}</td>
+                    <td>$${(item.quantity * item.price).toFixed(2)}</td>
+                `;
+                orderItemsList.appendChild(row);
+            });
+            
+            // Calculate totals
+            const subtotal = order.items.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+            const shipping = 5.99; // Fixed shipping cost for demo
+            const total = subtotal + shipping;
+            
+            orderSubtotal.textContent = subtotal.toFixed(2);
+            orderShipping.textContent = shipping.toFixed(2);
+            orderTotal.textContent = total.toFixed(2);
+            
+            // Set current status
+            orderStatusSelect.value = order.status;
+            
+            // Show modal
+            orderModal.style.display = 'flex';
+        }
+
+        // Edit product
+        function editProduct(productId) {
+            const product = adminData.products.find(p => p.id === productId);
+            if (!product) return;
+            
+            currentEditingProduct = product;
+            
+            productModalTitle.textContent = 'Edit Product';
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productCategory').value = product.category;
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productStock').value = product.stock;
+            document.getElementById('productDescription').value = product.description || '';
+            document.getElementById('productImage').value = product.image;
+            
+            productModal.style.display = 'flex';
+        }
+
+        // Delete product
+        function deleteProduct(productId) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                adminData.products = adminData.products.filter(p => p.id !== productId);
+                localStorage.setItem('products', JSON.stringify(adminData.products));
+                displayProducts();
+                updateDashboardStats();
+            }
+        }
+
+        // Add new product
+        addProductBtn.addEventListener('click', () => {
+            currentEditingProduct = null;
+            productModalTitle.textContent = 'Add New Product';
+            productForm.reset();
+            productModal.style.display = 'flex';
+        });
+
+        // Save product (add or edit)
+        saveProductBtn.addEventListener('click', () => {
+            const name = document.getElementById('productName').value;
+            const category = document.getElementById('productCategory').value;
+            const price = parseFloat(document.getElementById('productPrice').value);
+            const stock = parseInt(document.getElementById('productStock').value);
+            const description = document.getElementById('productDescription').value;
+            const image = document.getElementById('productImage').value;
+            
+            if (!name || !category || !price || !stock) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            if (currentEditingProduct) {
+                // Update existing product
+                currentEditingProduct.name = name;
+                currentEditingProduct.category = category;
+                currentEditingProduct.price = price;
+                currentEditingProduct.stock = stock;
+                currentEditingProduct.description = description;
+                currentEditingProduct.image = image;
+            } else {
+                // Add new product
+                const newId = adminData.products.length > 0 
+                    ? Math.max(...adminData.products.map(p => p.id)) + 1 
+                    : 1;
+                
+                adminData.products.push({
+                    id: newId,
+                    name,
+                    category,
+                    price,
+                    stock,
+                    description,
+                    image
+                });
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('products', JSON.stringify(adminData.products));
+            
+            // Update UI
+            displayProducts();
+            updateDashboardStats();
+            
+            // Close modal
+            productModal.style.display = 'none';
+        });
+
+        // Update order status
+        updateOrderStatusBtn.addEventListener('click', () => {
+            if (!currentEditingOrder) return;
+            
+            currentEditingOrder.status = orderStatusSelect.value;
+            
+            // Save to localStorage
+            localStorage.setItem('allOrders', JSON.stringify(adminData.orders));
+            
+            // Update UI
+            displayRecentOrders();
+            displayOrders();
+            updateDashboardStats();
+            
+            // Close modal
+            orderModal.style.display = 'none';
+        });
+
+        // Close modals
+        closeProductModal.addEventListener('click', () => {
+            productModal.style.display = 'none';
+        });
+        
+        cancelProductBtn.addEventListener('click', () => {
+            productModal.style.display = 'none';
+        });
+        
+        closeOrderModal.addEventListener('click', () => {
+            orderModal.style.display = 'none';
+        });
+
+        // View all orders
+        viewAllOrdersBtn.addEventListener('click', () => {
+            // Navigate to orders section
+            navLinks.forEach(l => l.classList.remove('active'));
+            document.querySelector('[data-section="orders"]').classList.add('active');
+            
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById('ordersSection').style.display = 'block';
+        });
+
+        // Order filter change
+        orderFilter.addEventListener('change', () => {
+            displayOrders();
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === productModal) {
+                productModal.style.display = 'none';
+            }
+            if (e.target === orderModal) {
+                orderModal.style.display = 'none';
+            }
+        });
+
+        // Initialize admin avatar
+        adminAvatar.textContent = adminCredentials.username.charAt(0).toUpperCase();
+        adminName.textContent = adminCredentials.username;
+    </script>
+</body>
+</html>
